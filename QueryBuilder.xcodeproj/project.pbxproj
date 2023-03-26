@@ -14,6 +14,10 @@
 		0163104229CF82D300D64949 /* QueryBuilderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0163104129CF82D300D64949 /* QueryBuilderTests.swift */; };
 		0163104C29CF82D300D64949 /* QueryBuilderUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0163104B29CF82D300D64949 /* QueryBuilderUITests.swift */; };
 		0163104E29CF82D300D64949 /* QueryBuilderUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0163104D29CF82D300D64949 /* QueryBuilderUITestsLaunchTests.swift */; };
+		0163105B29CF82EF00D64949 /* Article.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0163105A29CF82EF00D64949 /* Article.swift */; };
+		0163105D29CF8A8600D64949 /* Queryable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0163105C29CF8A8600D64949 /* Queryable.swift */; };
+		0163105F29CFB52000D64949 /* QueryNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0163105E29CFB52000D64949 /* QueryNode.swift */; };
+		0163106129CFB72000D64949 /* Conformance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0163106029CFB72000D64949 /* Conformance.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,6 +48,10 @@
 		0163104729CF82D300D64949 /* QueryBuilderUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = QueryBuilderUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		0163104B29CF82D300D64949 /* QueryBuilderUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueryBuilderUITests.swift; sourceTree = "<group>"; };
 		0163104D29CF82D300D64949 /* QueryBuilderUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueryBuilderUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		0163105A29CF82EF00D64949 /* Article.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Article.swift; sourceTree = "<group>"; };
+		0163105C29CF8A8600D64949 /* Queryable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Queryable.swift; sourceTree = "<group>"; };
+		0163105E29CFB52000D64949 /* QueryNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueryNode.swift; sourceTree = "<group>"; };
+		0163106029CFB72000D64949 /* Conformance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Conformance.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -96,6 +104,10 @@
 			children = (
 				0163103029CF82D200D64949 /* QueryBuilderApp.swift */,
 				0163103229CF82D200D64949 /* ContentView.swift */,
+				0163105A29CF82EF00D64949 /* Article.swift */,
+				0163105C29CF8A8600D64949 /* Queryable.swift */,
+				0163105E29CFB52000D64949 /* QueryNode.swift */,
+				0163106029CFB72000D64949 /* Conformance.swift */,
 				0163103429CF82D300D64949 /* Assets.xcassets */,
 				0163103629CF82D300D64949 /* Preview Content */,
 			);
@@ -257,8 +269,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0163105D29CF8A8600D64949 /* Queryable.swift in Sources */,
+				0163106129CFB72000D64949 /* Conformance.swift in Sources */,
+				0163105F29CFB52000D64949 /* QueryNode.swift in Sources */,
 				0163103329CF82D200D64949 /* ContentView.swift in Sources */,
 				0163103129CF82D200D64949 /* QueryBuilderApp.swift in Sources */,
+				0163105B29CF82EF00D64949 /* Article.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
