@@ -163,17 +163,9 @@
 				0163106529D0FEA500D64949 /* BoolComparableView.swift */,
 				0163106729D1012B00D64949 /* DateComparableView.swift */,
 				0163106929D1075F00D64949 /* EmptyComparableView.swift */,
-				0163106F29D37C2900D64949 /* StringComparableView */,
-			);
-			path = ComparableViews;
-			sourceTree = "<group>";
-		};
-		0163106F29D37C2900D64949 /* StringComparableView */ = {
-			isa = PBXGroup;
-			children = (
 				0163107029D37C4200D64949 /* StringComparableView.swift */,
 			);
-			path = StringComparableView;
+			path = ComparableViews;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
