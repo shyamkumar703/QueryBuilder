@@ -7,14 +7,14 @@
 
 import Foundation
 
-class QueryNode<U: Queryable, T: IsComparable>: AnyQueryNode {
+class QueryNode<U: Queryable>: AnyQueryNode {
     var comparator: Comparator
-    var compareToValue: T
+    var compareToValue: any IsComparable
     var comparableObject: U.Type
     var objectKeyPath: PartialKeyPath<U>
     var link: QueryLink?
     
-    init(comparator: Comparator, compareToValue: T, comparableObject: U.Type, objectKeyPath: PartialKeyPath<U>) {
+    init(comparator: Comparator, compareToValue: any IsComparable, comparableObject: U.Type, objectKeyPath: PartialKeyPath<U>) {
         self.comparator = comparator
         self.compareToValue = compareToValue
         self.comparableObject = comparableObject
@@ -22,7 +22,7 @@ class QueryNode<U: Queryable, T: IsComparable>: AnyQueryNode {
     }
     
     func addNode<ValueType: IsComparable>(keypath: PartialKeyPath<U>, compareTo: ValueType, comparator: Comparator, connectWith: QueryEval) {
-        let currentNode = QueryNode<U, ValueType>(
+        let currentNode = QueryNode<U>(
             comparator: comparator,
             compareToValue: compareTo,
             comparableObject: U.self,
@@ -38,12 +38,16 @@ class QueryNode<U: Queryable, T: IsComparable>: AnyQueryNode {
         }
     }
     
+    func addNode(node: QueryNode<U>, connectWith queryEval: QueryEval) {
+        addNode(keypath: node.objectKeyPath, compareTo: node.compareToValue, comparator: node.comparator, connectWith: queryEval)
+    }
+    
     func evaluate(_ obj: any Queryable) -> Bool {
         guard let obj = obj as? U else {
             // TODO: - Error handle
             return false
         }
-        guard let objectValue = obj[keyPath: objectKeyPath] as? T else {
+        guard let objectValue = obj[keyPath: objectKeyPath] as? (any IsComparable) else {
             // TODO: - Error handle
             return false
         }
@@ -71,4 +75,18 @@ class QueryNode<U: Queryable, T: IsComparable>: AnyQueryNode {
             node.link = link
         }
     }
+}
+
+func conditionallyCast<T, U>(_ x: T, to destType: U.Type) -> U? {
+
+  let sourceType = type(of: x)
+
+  if let sourceType = sourceType as? AnyClass,
+     let destType = destType as? AnyClass { // class-to-class
+
+    return sourceType.isSubclass(of: destType) ? (x as! U) : nil
+  }
+
+  // otherwise fall back to as?
+  return x as? U
 }

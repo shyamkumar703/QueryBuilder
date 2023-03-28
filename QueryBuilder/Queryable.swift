@@ -22,7 +22,7 @@ protocol AnyQueryNode: AnyObject {
 
 protocol IsComparable {
     associatedtype ViewType: ComparableView
-    func evaluate(comparator: Comparator, against value: Self) -> Bool
+    func evaluate(comparator: Comparator, against value: any IsComparable) -> Bool
     func getValidComparators() -> [Comparator]
     static func createAssociatedView() -> ViewType
 }
@@ -73,7 +73,7 @@ enum QueryLink {
 }
 
 extension Collection where Element: Queryable {
-    func evaluate<ValueType: IsComparable>(node: QueryNode<Element, ValueType>) -> [Self.Element] {
+    func evaluate(node: QueryNode<Element>) -> [Self.Element] {
         return self.filter({ node.evaluate($0) })
     }
 }

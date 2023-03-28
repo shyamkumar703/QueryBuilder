@@ -7,15 +7,28 @@
 
 import SwiftUI
 
+class ConnectorViewModel: ObservableObject, Identifiable {
+    @Published var queryEval: QueryEval = .and
+    var id: UUID = UUID()
+    
+    func createView() -> ConnectorView {
+        return ConnectorView(viewModel: self)
+    }
+    
+    func toggleQueryEval() {
+        queryEval.toggle()
+    }
+}
+
 struct ConnectorView: View {
-    @State private var queryEval: QueryEval = .and
+    @ObservedObject var viewModel: ConnectorViewModel
     
     var body: some View {
         HStack {
-            Text(queryEval.rawValue.uppercased())
-                .modifier(InsetText(color: queryEval.color))
+            Text(viewModel.queryEval.rawValue.uppercased())
+                .modifier(InsetText(color: viewModel.queryEval.color))
                 .onTapGesture {
-                    queryEval.toggle()
+                    viewModel.toggleQueryEval()
                 }
             
             Spacer()
@@ -26,6 +39,6 @@ struct ConnectorView: View {
 
 struct ConnectorView_Previews: PreviewProvider {
     static var previews: some View {
-        ConnectorView()
+        ConnectorViewModel().createView()
     }
 }

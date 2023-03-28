@@ -8,7 +8,11 @@
 import Foundation
 
 extension Comparable where Self: IsComparable {
-    func evaluate(comparator: Comparator, against value: Self) -> Bool {
+    func evaluate(comparator: Comparator, against value: any IsComparable) -> Bool {
+        guard let value = value as? Self else {
+            // TODO: - Throw error here
+            return false
+        }
         switch comparator {
         case .less:
             return self < value
@@ -33,7 +37,11 @@ extension Bool: IsComparable {
         [.equal, .notEqual]
     }
     
-    func evaluate(comparator: Comparator, against value: Bool) -> Bool {
+    func evaluate(comparator: Comparator, against value: any IsComparable) -> Bool {
+        guard let value = value as? Bool else {
+            // TODO: - Throw error here
+            return false
+        }
         // TODO: - Replace print statements with logs
         switch comparator {
         case .less:

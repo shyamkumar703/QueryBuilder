@@ -7,14 +7,12 @@
 
 import SwiftUI
 
-struct QueryPredicateView<QueryableElement: Queryable>: View {
-    var queryableArray = [QueryableElement]()
-    
-//    private var queryNode = QueryNode(comparator: .less, compareToValue: 100, comparableObject: Article.self, objectKeyPath: \.likes)
-    @State private var comparator: Comparator = .less
-    @State private var queryableParam: PartialKeyPath<QueryableElement> = QueryableElement.queryableParameters.first!.key
-    @State private var selectedComparator: Comparator = .less
-    @State private var showCompanionView: Bool = false
+class QueryPredicateViewModel<QueryableElement: Queryable>: ObservableObject, Identifiable {
+    var id = UUID()
+    @Published var comparator: Comparator = .less
+    @Published var queryableParam: PartialKeyPath<QueryableElement> = QueryableElement.queryableParameters.first!.key
+    @Published var selectedComparator: Comparator = .less
+    @Published var showCompanionView: Bool = false
     
     var comparatorView: any ComparableView {
         if let type = QueryableElement.queryableParameters[queryableParam] {
@@ -25,18 +23,31 @@ struct QueryPredicateView<QueryableElement: Queryable>: View {
         }
     }
     
+    func createQueryNode() -> QueryNode<QueryableElement> {
+        return QueryNode(comparator: comparator, compareToValue: comparatorView.value, comparableObject: QueryableElement.self, objectKeyPath: queryableParam)
+    }
+    
+    func createView() -> QueryPredicateView<QueryableElement> {
+        QueryPredicateView(viewModel: self)
+    }
+    
+}
+
+struct QueryPredicateView<QueryableElement: Queryable>: View {
+    @ObservedObject var viewModel: QueryPredicateViewModel<QueryableElement>
+    
     var body: some View {
-        HStack(alignment: .center) {
+        return HStack(alignment: .center) {
             Menu(
                 content: {
-                    ForEach(QueryableElement.queryableParameters.filter({ $0.key != queryableParam }), id: \.key) { param in
+                    ForEach(QueryableElement.queryableParameters.filter({ $0.key != viewModel.queryableParam }), id: \.key) { param in
                         Button(QueryableElement.stringFor(param.key)) {
-                            self.queryableParam = param.key
+                            viewModel.queryableParam = param.key
                         }
                     }
                 },
                 label: {
-                    Text(QueryableElement.stringFor(queryableParam))
+                    Text(QueryableElement.stringFor(viewModel.queryableParam))
                         .modifier(InsetText())
                 }
             )
@@ -44,21 +55,15 @@ struct QueryPredicateView<QueryableElement: Queryable>: View {
                 transaction.animation = nil
             }
             
-            ComparatorView(selectedComparator: $selectedComparator)
+            ComparatorView(selectedComparator: $viewModel.selectedComparator)
             
-            AnyView(comparatorView)
+            AnyView(viewModel.comparatorView)
             
             Spacer()
             
         }
         .fixedSize(horizontal: false, vertical: true)
         .padding()
-    }
-    
-    func createQueryNode() -> AnyQueryNode? {
-        if let type = QueryableElement.queryableParameters[queryableParam] {
-            return QueryNode(comparator: comparator, compareToValue: comparatorView.value, comparableObject: QueryableElement.self, objectKeyPath: queryableParam)
-        }
     }
 }
 
@@ -88,7 +93,6 @@ struct InsetText: ViewModifier {
 
 struct QueryPredicateView_Previews: PreviewProvider {
     static var previews: some View {
-        QueryPredicateView<Article>()
-            .preferredColorScheme(.light)
+        QueryPredicateViewModel<Article>().createView()
     }
 }

@@ -11,7 +11,7 @@ import SwiftUI
 struct QueryBuilderApp: App {
     var body: some Scene {
         WindowGroup {
-            QueryBuilderView()
+            QueryBuilderView<Article>()
         }
     }
 }
