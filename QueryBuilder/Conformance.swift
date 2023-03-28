@@ -27,6 +27,12 @@ extension Comparable where Self: IsComparable {
 }
 
 extension Bool: IsComparable {
+    typealias ViewType = BoolComparableView
+    
+    func getValidComparators() -> [Comparator] {
+        [.equal, .notEqual]
+    }
+    
     func evaluate(comparator: Comparator, against value: Bool) -> Bool {
         // TODO: - Replace print statements with logs
         switch comparator {
@@ -50,8 +56,18 @@ extension Bool: IsComparable {
     }
 }
 
-extension Date: IsComparable {}
-extension String: IsComparable {}
-extension Int: IsComparable {}
-extension Double: IsComparable {}
-extension Float: IsComparable {}
+extension Date: IsComparable {
+    typealias ViewType = DateComparableView
+}
+extension String: IsComparable {
+    typealias ViewType = EmptyComparableView
+}
+extension Int: IsComparable {
+    typealias ViewType = EmptyComparableView
+}
+extension Double: IsComparable {
+    typealias ViewType = EmptyComparableView
+}
+extension Float: IsComparable {
+    typealias ViewType = EmptyComparableView
+}

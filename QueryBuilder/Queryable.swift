@@ -6,9 +6,11 @@
 //
 
 import Foundation
+import SwiftUI
 
 protocol Queryable: AnyObject {
-    var queryableParameters: [PartialKeyPath<Self>: any IsComparable.Type] { get set }
+    static var queryableParameters: [PartialKeyPath<Self>: any IsComparable.Type] { get set }
+    static func stringFor(_ keypath: PartialKeyPath<Self>) -> String
 }
 
 protocol AnyQueryNode: AnyObject {
@@ -19,21 +21,43 @@ protocol AnyQueryNode: AnyObject {
 }
 
 protocol IsComparable {
+    associatedtype ViewType: ComparableView
     func evaluate(comparator: Comparator, against value: Self) -> Bool
+    func getValidComparators() -> [Comparator]
+    static func createAssociatedView() -> ViewType
 }
 
-enum Comparator {
-    case less
-    case greater
-    case lessThanOrEqual
-    case greaterThanOrEqual
-    case equal
-    case notEqual
+extension IsComparable {
+    func getValidComparators() -> [Comparator] { Comparator.allCases }
+    static func createAssociatedView() -> ViewType { ViewType.create() }
 }
 
-enum QueryEval {
+enum Comparator: String, CaseIterable {
+    case less = "less than"
+    case greater = "greater than"
+    case lessThanOrEqual = "less than or equal to"
+    case greaterThanOrEqual = "greater than or equal to"
+    case equal = "equal to"
+    case notEqual = "not equal to"
+}
+
+enum QueryEval: String {
     case and
     case or
+    
+    mutating func toggle() {
+        switch self {
+        case .and: self = .or
+        case .or: self = .and
+        }
+    }
+    
+    var color: Color {
+        switch self {
+        case .and: return Color.green
+        case .or: return Color.purple
+        }
+    }
 }
 
 enum QueryLink {

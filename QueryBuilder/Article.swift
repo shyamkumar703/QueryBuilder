@@ -14,7 +14,7 @@ final class Article: Identifiable, Queryable {
     var likes: Int
     var isStarred: Bool
     
-    var queryableParameters: [PartialKeyPath<Article>: any IsComparable.Type] = [
+    static var queryableParameters: [PartialKeyPath<Article>: any IsComparable.Type] = [
         \Article.author: String.self,
         \Article.postedAt: Date.self,
         \Article.likes: Int.self,
@@ -28,6 +28,16 @@ final class Article: Identifiable, Queryable {
         self.postedAt = postedAt
         self.likes = likes
         self.isStarred = isStarred
+    }
+    
+    static func stringFor(_ keypath: PartialKeyPath<Article>) -> String {
+        switch keypath {
+        case \.author: return "Author"
+        case \.postedAt: return "Posted time"
+        case \.likes: return "Likes"
+        case \.isStarred: return "Starred"
+        default: return ""
+        }
     }
 }
 
