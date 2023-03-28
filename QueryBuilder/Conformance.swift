@@ -68,7 +68,9 @@ extension Date: IsComparable {
     typealias ViewType = DateComparableView
 }
 extension String: IsComparable {
-    typealias ViewType = EmptyComparableView
+    static func createAssociatedView(options: [(any IsComparable)]) -> StringComparableView {
+        return StringComparableView(options: options)
+    }
 }
 extension Int: IsComparable {
     typealias ViewType = EmptyComparableView

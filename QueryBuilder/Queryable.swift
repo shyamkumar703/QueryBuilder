@@ -24,12 +24,12 @@ protocol IsComparable {
     associatedtype ViewType: ComparableView
     func evaluate(comparator: Comparator, against value: any IsComparable) -> Bool
     func getValidComparators() -> [Comparator]
-    static func createAssociatedView() -> ViewType
+    static func createAssociatedView(options: [(any IsComparable)]) -> ViewType
 }
 
 extension IsComparable {
     func getValidComparators() -> [Comparator] { Comparator.allCases }
-    static func createAssociatedView() -> ViewType { ViewType.create() }
+    static func createAssociatedView(options: [(any IsComparable)]) -> ViewType { ViewType.create() }
 }
 
 enum Comparator: String, CaseIterable {

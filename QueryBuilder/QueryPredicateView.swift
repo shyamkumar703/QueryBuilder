@@ -9,6 +9,7 @@ import SwiftUI
 
 class QueryPredicateViewModel<QueryableElement: Queryable>: ObservableObject, Identifiable {
     var id = UUID()
+    var elements = [QueryableElement]()
     @Published var comparator: Comparator = .less
     @Published var queryableParam: PartialKeyPath<QueryableElement> = QueryableElement.queryableParameters.first!.key {
         didSet {
@@ -26,13 +27,17 @@ class QueryPredicateViewModel<QueryableElement: Queryable>: ObservableObject, Id
     
     var comparatorView: any ComparableView {
         if let type = QueryableElement.queryableParameters[queryableParam] {
-           return type.createAssociatedView()
+           return type.createAssociatedView(options: options)
         } else {
             // TODO: - Error-handle appropriately
             return EmptyComparableView()
         }
     }
     
+    var options: [any IsComparable] {
+        elements.compactMap({ $0[keyPath: queryableParam] as? (any IsComparable) })
+    }
+     
     func createQueryNode() -> QueryNode<QueryableElement> {
         return QueryNode(comparator: comparator, compareToValue: comparatorView.value, comparableObject: QueryableElement.self, objectKeyPath: queryableParam)
     }

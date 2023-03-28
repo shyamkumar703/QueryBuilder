@@ -24,6 +24,7 @@
 		0163106A29D1075F00D64949 /* EmptyComparableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0163106929D1075F00D64949 /* EmptyComparableView.swift */; };
 		0163106C29D237FB00D64949 /* QueryBuilderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0163106B29D237FB00D64949 /* QueryBuilderView.swift */; };
 		0163106E29D23A6500D64949 /* ConnectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0163106D29D23A6500D64949 /* ConnectorView.swift */; };
+		0163107129D37C4200D64949 /* StringComparableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0163107029D37C4200D64949 /* StringComparableView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -64,6 +65,7 @@
 		0163106929D1075F00D64949 /* EmptyComparableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyComparableView.swift; sourceTree = "<group>"; };
 		0163106B29D237FB00D64949 /* QueryBuilderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueryBuilderView.swift; sourceTree = "<group>"; };
 		0163106D29D23A6500D64949 /* ConnectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectorView.swift; sourceTree = "<group>"; };
+		0163107029D37C4200D64949 /* StringComparableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringComparableView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -161,8 +163,17 @@
 				0163106529D0FEA500D64949 /* BoolComparableView.swift */,
 				0163106729D1012B00D64949 /* DateComparableView.swift */,
 				0163106929D1075F00D64949 /* EmptyComparableView.swift */,
+				0163106F29D37C2900D64949 /* StringComparableView */,
 			);
 			path = ComparableViews;
+			sourceTree = "<group>";
+		};
+		0163106F29D37C2900D64949 /* StringComparableView */ = {
+			isa = PBXGroup;
+			children = (
+				0163107029D37C4200D64949 /* StringComparableView.swift */,
+			);
+			path = StringComparableView;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -295,6 +306,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0163107129D37C4200D64949 /* StringComparableView.swift in Sources */,
 				0163106E29D23A6500D64949 /* ConnectorView.swift in Sources */,
 				0163106629D0FEA500D64949 /* BoolComparableView.swift in Sources */,
 				0163105D29CF8A8600D64949 /* Queryable.swift in Sources */,
