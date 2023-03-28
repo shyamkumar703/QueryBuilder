@@ -9,11 +9,12 @@ import SwiftUI
 
 struct ComparatorView: View {
     @Binding var selectedComparator: Comparator
+    var validComparators: [Comparator]
     
     var body: some View {
         Menu(
             content: {
-                ForEach(Comparator.allCases.filter({ $0 != selectedComparator }), id: \.rawValue) { comparator in
+                ForEach(validComparators.filter({ $0 != selectedComparator }), id: \.rawValue) { comparator in
                     Button(
                         action: {
                             self.selectedComparator = comparator
@@ -119,7 +120,7 @@ struct InsetSymbol: ViewModifier {
 
 struct ComparatorView_Previews: PreviewProvider {
     static var previews: some View {
-        ComparatorView(selectedComparator: .constant(.less))
+        ComparatorView(selectedComparator: .constant(.less), validComparators: Comparator.allCases)
             .preferredColorScheme(.dark)
     }
 }

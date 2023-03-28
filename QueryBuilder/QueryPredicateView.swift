@@ -10,9 +10,19 @@ import SwiftUI
 class QueryPredicateViewModel<QueryableElement: Queryable>: ObservableObject, Identifiable {
     var id = UUID()
     @Published var comparator: Comparator = .less
-    @Published var queryableParam: PartialKeyPath<QueryableElement> = QueryableElement.queryableParameters.first!.key
+    @Published var queryableParam: PartialKeyPath<QueryableElement> = QueryableElement.queryableParameters.first!.key {
+        didSet {
+            if !validComparators.contains(selectedComparator) {
+                selectedComparator = validComparators.randomElement()!
+            }
+        }
+    }
     @Published var selectedComparator: Comparator = .less
     @Published var showCompanionView: Bool = false
+    
+    var validComparators: [Comparator] {
+        Comparator.validComparators(for: comparatorView.value)
+    }
     
     var comparatorView: any ComparableView {
         if let type = QueryableElement.queryableParameters[queryableParam] {
@@ -55,7 +65,7 @@ struct QueryPredicateView<QueryableElement: Queryable>: View {
                 transaction.animation = nil
             }
             
-            ComparatorView(selectedComparator: $viewModel.selectedComparator)
+            ComparatorView(selectedComparator: $viewModel.selectedComparator, validComparators: viewModel.validComparators)
             
             AnyView(viewModel.comparatorView)
             

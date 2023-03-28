@@ -39,6 +39,11 @@ enum Comparator: String, CaseIterable {
     case greaterThanOrEqual = "greater than or equal to"
     case equal = "equal to"
     case notEqual = "not equal to"
+    
+    static func validComparators(for value: any IsComparable) -> [Comparator] {
+        if value as? Bool != nil { return [.notEqual, .equal] }
+        return Self.allCases
+    }
 }
 
 enum QueryEval: String {
