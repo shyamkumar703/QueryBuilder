@@ -13,6 +13,7 @@ class QueryBuilderViewModel<QueryableElement: Queryable>: ObservableObject {
     @Published var isShowingFilterSaveAlert: Bool = false
     @Binding var userFilters: [(String, QueryNode<QueryableElement>)]
     @Binding var currentFilter: (String, QueryNode<QueryableElement>)?
+    @Binding var filteredItems: [QueryableElement]?
     
     var initialFilterName: String?
     
@@ -30,11 +31,12 @@ class QueryBuilderViewModel<QueryableElement: Queryable>: ObservableObject {
         }
     }
     
-    init(userFilters: Binding<[(String, QueryNode<QueryableElement>)]>, currentFilter: Binding<(String, QueryNode<QueryableElement>)?>, elements: [QueryableElement], node: QueryNode<QueryableElement>? = nil, name: String? = nil) {
+    init(userFilters: Binding<[(String, QueryNode<QueryableElement>)]>, currentFilter: Binding<(String, QueryNode<QueryableElement>)?>, filteredItems: Binding<[QueryableElement]?>, elements: [QueryableElement], node: QueryNode<QueryableElement>? = nil, name: String? = nil) {
         self._userFilters = userFilters
         self._currentFilter = currentFilter
         self.elements = elements
         self.initialFilterName = name
+        self._filteredItems = filteredItems
         
         if let node {
             // convert node to vm
@@ -95,12 +97,14 @@ class QueryBuilderViewModel<QueryableElement: Queryable>: ObservableObject {
                 try QueryBuilderSDK.save(node: node, with: filterName)
                 userFilters.append((filterName, node))
                 currentFilter = (filterName, node)
+                filteredItems = elements.filter({ node.evaluate($0) })
             } else if let initialFilterName {
                 QueryBuilderSDK.removeNode(with: initialFilterName, type: QueryableElement.self)
                 try QueryBuilderSDK.save(node: node, with: filterName)
                 userFilters = userFilters.filter({ $0.0 != initialFilterName })
                 userFilters.append((filterName, node))
                 currentFilter = (filterName, node)
+                filteredItems = elements.filter({ node.evaluate($0) })
             }
             
         } catch {
