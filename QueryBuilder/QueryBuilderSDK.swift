@@ -70,6 +70,7 @@ class QueryBuilderSDK {
         UserDefaults.standard.set(newFilters, forKey: userDefaultsKey)
         // Remove node from UD
         UserDefaults.standard.removeObject(forKey: name)
+        UserDefaults.standard.synchronize()
     }
 }
 

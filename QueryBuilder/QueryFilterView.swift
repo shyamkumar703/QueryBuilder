@@ -12,16 +12,14 @@ struct QueryFilterView<QueryableElement: Queryable>: View {
     
     var filterOptions: [[FilterOptions]] {
         var queryOptions = [[FilterOptions]]()
-        var options: [FilterOptions] = userFilters.map({ FilterOptions.query($0) })
+        let options: [FilterOptions] = QueryBuilderSDK.fetchFilters(for: QueryableElement.self).map({ FilterOptions.query($0) })
         queryOptions.append(options)
         
-        var additionalOptions: [FilterOptions] = [.addNew]
-        
         if currentFilter != nil {
-            additionalOptions.append(.editCurrentFilter)
-            additionalOptions.append(.clearFilter)
+            queryOptions.append([.editCurrentFilter, .deleteCurrentFilter])
         }
-        queryOptions.append(additionalOptions)
+        
+        queryOptions.append([.addNew, .clearFilter])
         
         return queryOptions
     }
@@ -38,6 +36,9 @@ struct QueryFilterView<QueryableElement: Queryable>: View {
             content: {
                 Section { viewForFilterOption(index: 0) }
                 Section { viewForFilterOption(index: 1) }
+                if filterOptions.count == 3 {
+                    Section { viewForFilterOption(index: 2) }
+                }
             },
             label: {
                 if let currentFilter {
@@ -124,6 +125,25 @@ struct QueryFilterView<QueryableElement: Queryable>: View {
                         }
                     )
                 }
+            case .deleteCurrentFilter:
+                if let currentFilter {
+                    Button(
+                        role: .destructive,
+                        action: {
+                            // delete
+                            QueryBuilderSDK.removeNode(with: currentFilter.0, type: QueryableElement.self)
+                            // clear filter
+                            self.currentFilter = nil
+                            filteredItems = nil
+                        },
+                        label: {
+                            HStack{
+                                Text("Delete \"\(currentFilter.0)\"")
+                                Image(systemName: "trash.circle")
+                            }
+                        }
+                    )
+                }
             }
         }
     }
@@ -134,6 +154,7 @@ extension QueryFilterView {
         case query((String, QueryNode<QueryableElement>))
         case addNew
         case editCurrentFilter
+        case deleteCurrentFilter
         case clearFilter
         
         var id: String {
@@ -142,6 +163,7 @@ extension QueryFilterView {
             case .clearFilter: return "clearFilter"
             case .addNew: return "addNew"
             case .editCurrentFilter: return "editCurrentFilter"
+            case .deleteCurrentFilter: return "deleteCurrentFilter"
             }
         }
     }
