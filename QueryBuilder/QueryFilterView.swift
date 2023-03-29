@@ -8,8 +8,6 @@
 import SwiftUI
 
 struct QueryFilterView<QueryableElement: Queryable>: View {
-    @State private var userFilters: [(String, QueryNode<QueryableElement>)] = QueryBuilderSDK.fetchFilters(for: QueryableElement.self)
-    
     var filterOptions: [[FilterOptions]] {
         var queryOptions = [[FilterOptions]]()
         let options: [FilterOptions] = QueryBuilderSDK.fetchFilters(for: QueryableElement.self).map({ FilterOptions.query($0) })
@@ -50,7 +48,6 @@ struct QueryFilterView<QueryableElement: Queryable>: View {
         )
         .sheet(isPresented: $showFilterSheet) {
             QueryBuilderViewModel<QueryableElement>(
-                userFilters: $userFilters,
                 currentFilter: $currentFilter,
                 filteredItems: $filteredItems,
                 elements: allItems
@@ -59,7 +56,6 @@ struct QueryFilterView<QueryableElement: Queryable>: View {
         .sheet(isPresented: $showEditFilterSheet) {
             if let currentFilter {
                 QueryBuilderViewModel<QueryableElement>(
-                    userFilters: $userFilters,
                     currentFilter: $currentFilter,
                     filteredItems: $filteredItems,
                     elements: allItems,

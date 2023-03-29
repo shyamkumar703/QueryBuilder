@@ -11,7 +11,6 @@ class QueryBuilderViewModel<QueryableElement: Queryable>: ObservableObject {
     @Published var views: [QueryView] = []
     @Published var filterName: String = ""
     @Published var isShowingFilterSaveAlert: Bool = false
-    @Binding var userFilters: [(String, QueryNode<QueryableElement>)]
     @Binding var currentFilter: (String, QueryNode<QueryableElement>)?
     @Binding var filteredItems: [QueryableElement]?
     
@@ -31,8 +30,7 @@ class QueryBuilderViewModel<QueryableElement: Queryable>: ObservableObject {
         }
     }
     
-    init(userFilters: Binding<[(String, QueryNode<QueryableElement>)]>, currentFilter: Binding<(String, QueryNode<QueryableElement>)?>, filteredItems: Binding<[QueryableElement]?>, elements: [QueryableElement], node: QueryNode<QueryableElement>? = nil, name: String? = nil) {
-        self._userFilters = userFilters
+    init(currentFilter: Binding<(String, QueryNode<QueryableElement>)?>, filteredItems: Binding<[QueryableElement]?>, elements: [QueryableElement], node: QueryNode<QueryableElement>? = nil, name: String? = nil) {
         self._currentFilter = currentFilter
         self.elements = elements
         self.initialFilterName = name
@@ -95,14 +93,11 @@ class QueryBuilderViewModel<QueryableElement: Queryable>: ObservableObject {
             // if initialName is non-nil and initialName != filterName, remove(initialName), save(filterName), filter and append
             if initialFilterName == nil {
                 try QueryBuilderSDK.save(node: node, with: filterName)
-                userFilters.append((filterName, node))
                 currentFilter = (filterName, node)
                 filteredItems = elements.filter({ node.evaluate($0) })
             } else if let initialFilterName {
                 QueryBuilderSDK.removeNode(with: initialFilterName, type: QueryableElement.self)
                 try QueryBuilderSDK.save(node: node, with: filterName)
-                userFilters = userFilters.filter({ $0.0 != initialFilterName })
-                userFilters.append((filterName, node))
                 currentFilter = (filterName, node)
                 filteredItems = elements.filter({ node.evaluate($0) })
             }
@@ -131,38 +126,25 @@ struct QueryBuilderView<QueryableElement: Queryable>: View {
     var body: some View {
         NavigationView {
             ScrollView {
-                ForEach(viewModel.views) { viewCase in
-                    switch viewCase {
-                    case .connector(let connector): connector.createView()
-                    case .predicate(let predicate): predicate.createView()
+                VStack {
+                    ForEach(viewModel.views) { viewCase in
+                        switch viewCase {
+                        case .connector(let connector): connector.createView()
+                        case .predicate(let predicate): predicate.createView()
+                        }
+                    }
+                    
+                    AddButton(title: "Add condition") {
+                        withAnimation {
+                            viewModel.views += [
+                                .connector(ConnectorViewModel()),
+                                .predicate(QueryPredicateViewModel<QueryableElement>(elements: viewModel.elements))
+                            ]
+                        }
                     }
                 }
             }
             .navigationTitle(viewModel.filterName.isEmpty ? "New filter" : viewModel.filterName)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(
-                        action: {
-                            withAnimation {
-                                viewModel.views += [
-                                    .connector(ConnectorViewModel()),
-                                    .predicate(QueryPredicateViewModel<QueryableElement>(elements: viewModel.elements))
-                                ]
-                            }
-                        },
-                        label: {
-                            Image(systemName: "plus")
-                        }
-                    )
-                    .alert(viewModel.filterName.isEmpty ? "Enter a name": "Edit name", isPresented: $viewModel.isShowingFilterSaveAlert) {
-                        TextField("Filter name", text: $viewModel.filterName)
-                        Button("Save", action: save)
-                        Button("Cancel") {
-                            viewModel.isShowingFilterSaveAlert.toggle()
-                        }
-                    }
-                }
-            }
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(
@@ -173,6 +155,13 @@ struct QueryBuilderView<QueryableElement: Queryable>: View {
                             Text("Save")
                         }
                     )
+                    .alert(viewModel.filterName.isEmpty ? "Enter a name": "Edit name", isPresented: $viewModel.isShowingFilterSaveAlert) {
+                        TextField("Filter name", text: $viewModel.filterName)
+                        Button("Cancel") {
+                            viewModel.isShowingFilterSaveAlert.toggle()
+                        }
+                        Button("Save", action: save)
+                    }
                 }
             }
         }
@@ -186,9 +175,3 @@ struct QueryBuilderView<QueryableElement: Queryable>: View {
         dismiss()
     }
 }
-
-//struct QueryBuilderView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        QueryBuilderView<Article>(userFilters: .constant([]), elements: [])
-//    }
-//}

@@ -29,6 +29,7 @@
 		0163107729D38B2300D64949 /* QueryBuilderSDK.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0163107629D38B2300D64949 /* QueryBuilderSDK.swift */; };
 		0163107929D38E6E00D64949 /* SerializedQueryNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0163107829D38E6E00D64949 /* SerializedQueryNode.swift */; };
 		0163107B29D490E500D64949 /* QueryFilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0163107A29D490E500D64949 /* QueryFilterView.swift */; };
+		0163107D29D49CE300D64949 /* AddButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0163107C29D49CE300D64949 /* AddButton.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -74,6 +75,7 @@
 		0163107629D38B2300D64949 /* QueryBuilderSDK.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueryBuilderSDK.swift; sourceTree = "<group>"; };
 		0163107829D38E6E00D64949 /* SerializedQueryNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SerializedQueryNode.swift; sourceTree = "<group>"; };
 		0163107A29D490E500D64949 /* QueryFilterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueryFilterView.swift; sourceTree = "<group>"; };
+		0163107C29D49CE300D64949 /* AddButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddButton.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -127,6 +129,7 @@
 				0163103029CF82D200D64949 /* QueryBuilderApp.swift */,
 				0163107429D385AE00D64949 /* ArticleList.swift */,
 				0163107A29D490E500D64949 /* QueryFilterView.swift */,
+				0163107C29D49CE300D64949 /* AddButton.swift */,
 				0163107629D38B2300D64949 /* QueryBuilderSDK.swift */,
 				0163107829D38E6E00D64949 /* SerializedQueryNode.swift */,
 				0163103229CF82D200D64949 /* QueryPredicateView.swift */,
@@ -313,6 +316,7 @@
 				0163107129D37C4200D64949 /* StringComparableView.swift in Sources */,
 				0163106E29D23A6500D64949 /* ConnectorView.swift in Sources */,
 				0163106629D0FEA500D64949 /* BoolComparableView.swift in Sources */,
+				0163107D29D49CE300D64949 /* AddButton.swift in Sources */,
 				0163105D29CF8A8600D64949 /* Queryable.swift in Sources */,
 				0163106129CFB72000D64949 /* Conformance.swift in Sources */,
 				0163105F29CFB52000D64949 /* QueryNode.swift in Sources */,
