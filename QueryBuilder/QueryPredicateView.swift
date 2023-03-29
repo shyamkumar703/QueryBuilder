@@ -9,7 +9,7 @@ import SwiftUI
 
 class QueryPredicateViewModel<QueryableElement: Queryable>: ObservableObject, Identifiable {
     var id = UUID()
-    var elements = [QueryableElement]()
+    var elements: [QueryableElement]
     @Published var comparator: Comparator = .less
     @Published var queryableParam: PartialKeyPath<QueryableElement> = QueryableElement.queryableParameters.first!.key {
         didSet {
@@ -37,9 +37,16 @@ class QueryPredicateViewModel<QueryableElement: Queryable>: ObservableObject, Id
     var options: [any IsComparable] {
         elements.compactMap({ $0[keyPath: queryableParam] as? (any IsComparable) })
     }
+    
+    init(elements: [QueryableElement]) {
+        self.elements = elements
+        if !validComparators.contains(selectedComparator) {
+            selectedComparator = validComparators.randomElement()!
+        }
+    }
      
     func createQueryNode() -> QueryNode<QueryableElement> {
-        return QueryNode(comparator: comparator, compareToValue: comparatorView.value, comparableObject: QueryableElement.self, objectKeyPath: queryableParam)
+        return QueryNode(comparator: selectedComparator, compareToValue: comparatorView.value, comparableObject: QueryableElement.self, objectKeyPath: queryableParam)
     }
     
     func createView() -> QueryPredicateView<QueryableElement> {
@@ -52,6 +59,7 @@ struct QueryPredicateView<QueryableElement: Queryable>: View {
     @ObservedObject var viewModel: QueryPredicateViewModel<QueryableElement>
     
     var body: some View {
+        print("*****", viewModel.selectedComparator)
         return HStack(alignment: .center) {
             Menu(
                 content: {
@@ -108,6 +116,6 @@ struct InsetText: ViewModifier {
 
 struct QueryPredicateView_Previews: PreviewProvider {
     static var previews: some View {
-        QueryPredicateViewModel<Article>().createView()
+        QueryPredicateViewModel<Article>(elements: []).createView()
     }
 }

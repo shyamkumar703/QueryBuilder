@@ -11,6 +11,7 @@ import SwiftUI
 protocol Queryable: AnyObject {
     static var queryableParameters: [PartialKeyPath<Self>: any IsComparable.Type] { get set }
     static func stringFor(_ keypath: PartialKeyPath<Self>) -> String
+    static func keypathFor(_ string: String) throws -> PartialKeyPath<Self>
 }
 
 protocol AnyQueryNode: AnyObject {
@@ -18,9 +19,10 @@ protocol AnyQueryNode: AnyObject {
     var link: QueryLink? { get set }
     
     func evaluate(_ obj: any Queryable) -> Bool
+    func serialize() -> SerializedQueryNode
 }
 
-protocol IsComparable {
+protocol IsComparable: Codable {
     associatedtype ViewType: ComparableView
     func evaluate(comparator: Comparator, against value: any IsComparable) -> Bool
     func getValidComparators() -> [Comparator]
@@ -32,7 +34,7 @@ extension IsComparable {
     static func createAssociatedView(options: [(any IsComparable)]) -> ViewType { ViewType.create() }
 }
 
-enum Comparator: String, CaseIterable {
+enum Comparator: String, CaseIterable, Codable {
     case less = "less than"
     case greater = "greater than"
     case lessThanOrEqual = "less than or equal to"
@@ -46,7 +48,7 @@ enum Comparator: String, CaseIterable {
     }
 }
 
-enum QueryEval: String {
+enum QueryEval: String, Codable {
     case and
     case or
     

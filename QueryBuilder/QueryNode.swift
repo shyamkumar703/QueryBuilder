@@ -7,12 +7,13 @@
 
 import Foundation
 
-class QueryNode<U: Queryable>: AnyQueryNode {
+class QueryNode<U: Queryable>: AnyQueryNode, Identifiable {
     var comparator: Comparator
     var compareToValue: any IsComparable
     var comparableObject: U.Type
     var objectKeyPath: PartialKeyPath<U>
     var link: QueryLink?
+    var id: String = UUID().uuidString
     
     init(comparator: Comparator, compareToValue: any IsComparable, comparableObject: U.Type, objectKeyPath: PartialKeyPath<U>) {
         self.comparator = comparator
@@ -60,6 +61,17 @@ class QueryNode<U: Queryable>: AnyQueryNode {
         }
     }
     
+    func serialize() -> SerializedQueryNode {
+        switch link {
+        case .none:
+            return SerializedQueryNode(comparator: comparator, compareToValue: compareToValue, objectKeyPath: U.stringFor(objectKeyPath), link: nil, linkedNode: nil)
+        case .and(let node):
+            return SerializedQueryNode(comparator: comparator, compareToValue: compareToValue, objectKeyPath: U.stringFor(objectKeyPath), link: .and, linkedNode: node.serialize())
+        case .or(let node):
+            return SerializedQueryNode(comparator: comparator, compareToValue: compareToValue, objectKeyPath: U.stringFor(objectKeyPath), link: .or, linkedNode: node.serialize())
+        }
+    }
+    
     private func addLink(with node: AnyQueryNode, link: QueryLink) {
         if node.link != nil {
             switch node.link {
@@ -75,18 +87,4 @@ class QueryNode<U: Queryable>: AnyQueryNode {
             node.link = link
         }
     }
-}
-
-func conditionallyCast<T, U>(_ x: T, to destType: U.Type) -> U? {
-
-  let sourceType = type(of: x)
-
-  if let sourceType = sourceType as? AnyClass,
-     let destType = destType as? AnyClass { // class-to-class
-
-    return sourceType.isSubclass(of: destType) ? (x as! U) : nil
-  }
-
-  // otherwise fall back to as?
-  return x as? U
 }

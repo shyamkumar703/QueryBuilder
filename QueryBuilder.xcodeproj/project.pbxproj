@@ -25,6 +25,9 @@
 		0163106C29D237FB00D64949 /* QueryBuilderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0163106B29D237FB00D64949 /* QueryBuilderView.swift */; };
 		0163106E29D23A6500D64949 /* ConnectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0163106D29D23A6500D64949 /* ConnectorView.swift */; };
 		0163107129D37C4200D64949 /* StringComparableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0163107029D37C4200D64949 /* StringComparableView.swift */; };
+		0163107529D385AE00D64949 /* ArticleList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0163107429D385AE00D64949 /* ArticleList.swift */; };
+		0163107729D38B2300D64949 /* QueryBuilderSDK.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0163107629D38B2300D64949 /* QueryBuilderSDK.swift */; };
+		0163107929D38E6E00D64949 /* SerializedQueryNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0163107829D38E6E00D64949 /* SerializedQueryNode.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -66,6 +69,9 @@
 		0163106B29D237FB00D64949 /* QueryBuilderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueryBuilderView.swift; sourceTree = "<group>"; };
 		0163106D29D23A6500D64949 /* ConnectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectorView.swift; sourceTree = "<group>"; };
 		0163107029D37C4200D64949 /* StringComparableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringComparableView.swift; sourceTree = "<group>"; };
+		0163107429D385AE00D64949 /* ArticleList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleList.swift; sourceTree = "<group>"; };
+		0163107629D38B2300D64949 /* QueryBuilderSDK.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueryBuilderSDK.swift; sourceTree = "<group>"; };
+		0163107829D38E6E00D64949 /* SerializedQueryNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SerializedQueryNode.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -117,6 +123,9 @@
 			isa = PBXGroup;
 			children = (
 				0163103029CF82D200D64949 /* QueryBuilderApp.swift */,
+				0163107429D385AE00D64949 /* ArticleList.swift */,
+				0163107629D38B2300D64949 /* QueryBuilderSDK.swift */,
+				0163107829D38E6E00D64949 /* SerializedQueryNode.swift */,
 				0163103229CF82D200D64949 /* QueryPredicateView.swift */,
 				0163106B29D237FB00D64949 /* QueryBuilderView.swift */,
 				0163106D29D23A6500D64949 /* ConnectorView.swift */,
@@ -304,10 +313,13 @@
 				0163105D29CF8A8600D64949 /* Queryable.swift in Sources */,
 				0163106129CFB72000D64949 /* Conformance.swift in Sources */,
 				0163105F29CFB52000D64949 /* QueryNode.swift in Sources */,
+				0163107729D38B2300D64949 /* QueryBuilderSDK.swift in Sources */,
 				0163106A29D1075F00D64949 /* EmptyComparableView.swift in Sources */,
 				0163103329CF82D200D64949 /* QueryPredicateView.swift in Sources */,
 				0163106329D0B6EE00D64949 /* ComparatorView.swift in Sources */,
 				0163103129CF82D200D64949 /* QueryBuilderApp.swift in Sources */,
+				0163107529D385AE00D64949 /* ArticleList.swift in Sources */,
+				0163107929D38E6E00D64949 /* SerializedQueryNode.swift in Sources */,
 				0163106829D1012B00D64949 /* DateComparableView.swift in Sources */,
 				0163106C29D237FB00D64949 /* QueryBuilderView.swift in Sources */,
 				0163105B29CF82EF00D64949 /* Article.swift in Sources */,

@@ -39,6 +39,22 @@ final class Article: Identifiable, Queryable {
         default: return ""
         }
     }
+    
+    static func keypathFor(_ string: String) throws -> PartialKeyPath<Article> {
+        switch string {
+        case "Author": return \.author
+        case "Posted time": return \.postedAt
+        case "Likes": return \.likes
+        case "Starred": return \.isStarred
+        default: throw ArticleError.invalidKeypathString
+        }
+    }
+}
+
+extension Article {
+    enum ArticleError: Error {
+        case invalidKeypathString
+    }
 }
 
 

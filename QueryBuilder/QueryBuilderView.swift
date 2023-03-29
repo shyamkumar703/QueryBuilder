@@ -8,7 +8,14 @@
 import SwiftUI
 
 struct QueryBuilderView<QueryableElement: Queryable>: View {
-    @State private var views: [QueryView] = [.predicate(QueryPredicateViewModel<QueryableElement>())]
+    @State private var views: [QueryView] = []
+    @State private var filterName: String = ""
+    @State private var isShowingFilterSaveAlert: Bool = false
+    @Binding var userFilters: [(String, QueryNode<QueryableElement>)]
+    
+    @Environment(\.dismiss) var dismiss
+    
+    var elements: [QueryableElement]
     
     var body: some View {
         NavigationView {
@@ -28,7 +35,7 @@ struct QueryBuilderView<QueryableElement: Queryable>: View {
                             withAnimation {
                                 views += [
                                     .connector(ConnectorViewModel()),
-                                    .predicate(QueryPredicateViewModel<QueryableElement>())
+                                    .predicate(QueryPredicateViewModel<QueryableElement>(elements: elements))
                                 ]
                             }
                         },
@@ -36,19 +43,28 @@ struct QueryBuilderView<QueryableElement: Queryable>: View {
                             Image(systemName: "plus")
                         }
                     )
+                    .alert("Enter a name", isPresented: $isShowingFilterSaveAlert) {
+                        TextField("Filter name", text: $filterName)
+                        Button("Save", action: save)
+                    }
                 }
             }
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(
                         action: {
-                            _ = save()
+                            isShowingFilterSaveAlert = true
                         },
                         label: {
                             Text("Save")
                         }
                     )
                 }
+            }
+        }
+        .onAppear {
+            if views.count == 0 {
+                views.append(.predicate(QueryPredicateViewModel<QueryableElement>(elements: elements)))
             }
         }
     }
@@ -65,14 +81,14 @@ struct QueryBuilderView<QueryableElement: Queryable>: View {
         }
     }
     
-    func save() -> QueryNode<QueryableElement>? {
+    func save() {
         var node: QueryNode<QueryableElement>?
         switch views.first {
         case .predicate(let predicateView):
             node = predicateView.createQueryNode()
         default:
             // TODO: - Error handle appropriately
-            return nil
+            return
         }
         
         var currentIndex = 2
@@ -83,16 +99,29 @@ struct QueryBuilderView<QueryableElement: Queryable>: View {
                 currentIndex += 1
             } else {
                 // TODO: - Error handle appropriately
-                return nil
+                return
             }
         }
         
-        return node
+        guard let node else {
+            // TODO: - Error-handle appropriately here
+            return
+        }
+        
+        do {
+            // save here
+            try QueryBuilderSDK.save(node: node, with: filterName)
+            userFilters.append((filterName, node))
+            dismiss()
+        } catch {
+            // TODO: - Error handle appropriately
+            print(error)
+        }
     }
 }
 
 struct QueryBuilderView_Previews: PreviewProvider {
     static var previews: some View {
-        QueryBuilderView<Article>()
+        QueryBuilderView<Article>(userFilters: .constant([]), elements: [])
     }
 }
