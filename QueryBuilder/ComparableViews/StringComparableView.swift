@@ -7,11 +7,12 @@
 
 import SwiftUI
 
-struct StringComparableView: ComparableView {
-    let alphabet: [String] = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"]
-    @State var value: String = "A"
+class StringComparableViewModel: ObservableObject, ComparableViewModel {
+    @Published var value: String = "A"
     var options: [(any IsComparable)]
-    private var displayOptions: [String] {
+    let alphabet: [String] = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"]
+    
+    var displayOptions: [String] {
         if let options = options as? [String],
            !options.isEmpty {
             return options
@@ -20,13 +21,27 @@ struct StringComparableView: ComparableView {
         }
     }
     
+    init(value: String?, options: [(any IsComparable)]) {
+        if let value { self.value = value }
+        self.options = options
+    }
+    
+    func getValue() -> String { return value }
+    
+    func createView() -> StringComparableView { StringComparableView(viewModel: self) }
+    
+}
+
+struct StringComparableView: ComparableView {
+    @ObservedObject var viewModel: StringComparableViewModel
+    
     var body: some View {
         Menu(
             content: {
-                ForEach(displayOptions.filter({ $0 != value}).sorted(), id: \.self) { value in
+                ForEach(viewModel.displayOptions.filter({ $0 != viewModel.value}).sorted(), id: \.self) { value in
                     Button(
                         action: {
-                            self.value = value
+                            viewModel.value = value
                         },
                         label: {
                             Text(value)
@@ -35,23 +50,23 @@ struct StringComparableView: ComparableView {
                 }
             },
             label: {
-                Text(value)
+                Text(viewModel.value)
                     .modifier(InsetText(color: .red))
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
         )
         .onAppear {
-            value = displayOptions.randomElement()!
+            viewModel.value = viewModel.displayOptions.randomElement()!
         }
     }
     
-    static func create() -> StringComparableView {
-        return StringComparableView(options: [])
+    static func create(_ viewModel: StringComparableViewModel) -> StringComparableView {
+        return StringComparableView(viewModel: viewModel)
     }
 }
 
 struct StringComparableView_Previews: PreviewProvider {
     static var previews: some View {
-        StringComparableView(options: ["test", "test2"])
+        StringComparableView.create(StringComparableViewModel(value: nil, options: ["test1", "test2"]))
     }
 }

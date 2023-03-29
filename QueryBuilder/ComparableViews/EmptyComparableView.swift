@@ -7,20 +7,28 @@
 
 import SwiftUI
 
+class EmptyComparableViewModel: ComparableViewModel {
+    func getValue() -> Int { 1 }
+    
+    func createView() -> EmptyComparableView {
+        EmptyComparableView(viewModel: self)
+    }
+}
+
 struct EmptyComparableView: ComparableView {
-    var value: Int = 0
+    var viewModel: EmptyComparableViewModel
     
     var body: some View {
         Text("Empty")
     }
     
-    static func create() -> EmptyComparableView {
-        EmptyComparableView()
+    static func create(_ viewModel: EmptyComparableViewModel) -> EmptyComparableView {
+        EmptyComparableView(viewModel: viewModel)
     }
 }
 
 struct EmptyComparableView_Previews: PreviewProvider {
     static var previews: some View {
-        EmptyComparableView()
+        EmptyComparableViewModel().createView()
     }
 }

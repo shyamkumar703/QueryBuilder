@@ -31,8 +31,6 @@ extension Comparable where Self: IsComparable {
 }
 
 extension Bool: IsComparable {
-    typealias ViewType = BoolComparableView
-    
     func getValidComparators() -> [Comparator] {
         [.equal, .notEqual]
     }
@@ -62,22 +60,36 @@ extension Bool: IsComparable {
             return self != value
         }
     }
+    
+    static func createAssociatedViewModel(options: [(any IsComparable)]) -> BoolComparableViewModel {
+        BoolComparableViewModel(value: nil)
+    }
 }
 
 extension Date: IsComparable {
-    typealias ViewType = DateComparableView
+    static func createAssociatedViewModel(options: [(any IsComparable)]) -> DateComparableViewModel {
+        DateComparableViewModel(value: nil)
+    }
 }
 extension String: IsComparable {
-    static func createAssociatedView(options: [(any IsComparable)]) -> StringComparableView {
-        return StringComparableView(options: options)
+    static func createAssociatedViewModel(options: [(any IsComparable)]) -> StringComparableViewModel {
+        return StringComparableViewModel(value: nil, options: options)
     }
 }
 extension Int: IsComparable {
-    typealias ViewType = EmptyComparableView
+    static func createAssociatedViewModel(options: [(any IsComparable)]) -> EmptyComparableViewModel {
+        EmptyComparableViewModel()
+    }
 }
 extension Double: IsComparable {
-    typealias ViewType = EmptyComparableView
+    typealias ViewModelType = EmptyComparableViewModel
+
+    static func createAssociatedViewModel(options: [(any IsComparable)]) -> EmptyComparableViewModel {
+        EmptyComparableViewModel()
+    }
 }
 extension Float: IsComparable {
-    typealias ViewType = EmptyComparableView
+    static func createAssociatedViewModel(options: [(any IsComparable)]) -> EmptyComparableViewModel {
+        EmptyComparableViewModel()
+    }
 }

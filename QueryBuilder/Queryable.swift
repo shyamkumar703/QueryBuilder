@@ -23,15 +23,14 @@ protocol AnyQueryNode: AnyObject {
 }
 
 protocol IsComparable: Codable {
-    associatedtype ViewType: ComparableView
+    associatedtype ViewModelType: ComparableViewModel
     func evaluate(comparator: Comparator, against value: any IsComparable) -> Bool
     func getValidComparators() -> [Comparator]
-    static func createAssociatedView(options: [(any IsComparable)]) -> ViewType
+    static func createAssociatedViewModel(options: [(any IsComparable)]) -> ViewModelType
 }
 
 extension IsComparable {
     func getValidComparators() -> [Comparator] { Comparator.allCases }
-    static func createAssociatedView(options: [(any IsComparable)]) -> ViewType { ViewType.create() }
 }
 
 enum Comparator: String, CaseIterable, Codable {

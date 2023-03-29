@@ -22,15 +22,24 @@ class QueryPredicateViewModel<QueryableElement: Queryable>: ObservableObject, Id
     @Published var showCompanionView: Bool = false
     
     var validComparators: [Comparator] {
-        Comparator.validComparators(for: comparatorView.value)
+        Comparator.validComparators(for: comparatorView.viewModel.getValue())
     }
+    
+    private var cachedVMs = [String: any ComparableViewModel]()
     
     var comparatorView: any ComparableView {
         if let type = QueryableElement.queryableParameters[queryableParam] {
-           return type.createAssociatedView(options: options)
+            let cacheKey = String(describing: type)
+            if let vm = cachedVMs[cacheKey] {
+                return vm.createView()
+            } else {
+                let vm = type.createAssociatedViewModel(options: options)
+                cachedVMs[cacheKey] = vm
+                return vm.createView()
+            }
         } else {
             // TODO: - Error-handle appropriately
-            return EmptyComparableView()
+            return EmptyComparableViewModel().createView()
         }
     }
     
@@ -46,7 +55,7 @@ class QueryPredicateViewModel<QueryableElement: Queryable>: ObservableObject, Id
     }
      
     func createQueryNode() -> QueryNode<QueryableElement> {
-        return QueryNode(comparator: selectedComparator, compareToValue: comparatorView.value, comparableObject: QueryableElement.self, objectKeyPath: queryableParam)
+        return QueryNode(comparator: selectedComparator, compareToValue: comparatorView.viewModel.getValue(), comparableObject: QueryableElement.self, objectKeyPath: queryableParam)
     }
     
     func createView() -> QueryPredicateView<QueryableElement> {
