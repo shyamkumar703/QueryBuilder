@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ArticleList: View {
     @State private var showFilterSheet: Bool = false
+    @State private var showEditFilterSheet: Bool = false
     
     var articles: [Article] = [
         Article(id: UUID().uuidString, author: "Test 1", postedAt: Date(), likes: 50, isStarred: true),
@@ -16,15 +17,27 @@ struct ArticleList: View {
         Article(id: UUID().uuidString, author: "Test 3", postedAt: Date(), likes: 100, isStarred: false)
     ]
     
-    @State var filteredArticles: [Article]?
+    var filteredArticles: [Article]? {
+        if let currentFilter {
+            return articles.filter({ currentFilter.1.evaluate($0) })
+        } else {
+            return nil
+        }
+    }
     
     @State private var userFilters: [(String, QueryNode<Article>)] = QueryBuilderSDK.fetchFilters(for: Article.self)
     
     var filterOptions: [FilterOptions] {
         var options: [FilterOptions] = userFilters.map({ FilterOptions.query($0) })
         options.append(.addNew)
+        if currentFilter != nil {
+            options.append(.editCurrentFilter)
+            options.append(.clearFilter)
+        }
         return options
     }
+    
+    @State private var currentFilter: (String, QueryNode<Article>)?
     
     var body: some View {
         NavigationView {
@@ -54,25 +67,86 @@ struct ArticleList: View {
                             ForEach(filterOptions) { option in
                                 switch option {
                                 case .query(let (name, node)):
-                                    Button(name) {
-                                        filteredArticles = articles.filter({ node.evaluate($0) })
-                                    }
+                                    Button(
+                                        action: {
+                                            if name != currentFilter?.0 {
+                                                currentFilter = (name, node)
+                                            }
+                                        },
+                                        label: {
+                                            Text(name)
+                                        }
+                                    )
+                                case .clearFilter:
+                                    Button(
+                                        role: .destructive,
+                                        action: {
+                                            currentFilter = nil
+                                        },
+                                        label: {
+                                            HStack{
+                                                Text("Clear filter")
+                                                Image(systemName: "xmark.circle")
+                                            }
+                                        }
+                                    )
                                 case .addNew:
-                                    Button("Add filter") {
-                                        showFilterSheet.toggle()
+                                    Button(
+                                        action: {
+                                            showFilterSheet.toggle()
+                                        },
+                                        label: {
+                                            HStack{
+                                                Text("Add filter")
+                                                Image(systemName: "plus.circle")
+                                            }
+                                        }
+                                    )
+                                case .editCurrentFilter:
+                                    if let currentFilter {
+                                        Button(
+                                            action: {
+                                                showEditFilterSheet.toggle()
+                                            },
+                                            label: {
+                                                HStack{
+                                                    Text("Edit \"\(currentFilter.0)\"")
+                                                    Image(systemName: "pencil.circle")
+                                                }
+                                            }
+                                        )
                                     }
                                 }
                             }
                         },
                         label: {
-                            Text("Filter")
+                            if let currentFilter {
+                                Text("Filter: \(currentFilter.0)")
+                            } else {
+                                Text("Filter")
+                            }
                         }
                     )
                 }
             }
         }
         .sheet(isPresented: $showFilterSheet) {
-            QueryBuilderView<Article>(userFilters: $userFilters, elements: articles)
+            QueryBuilderViewModel<Article>(
+                userFilters: $userFilters,
+                currentFilter: $currentFilter,
+                elements: articles
+            ).createView()
+        }
+        .sheet(isPresented: $showEditFilterSheet) {
+            if let currentFilter {
+                QueryBuilderViewModel<Article>(
+                    userFilters: $userFilters,
+                    currentFilter: $currentFilter,
+                    elements: articles,
+                    node: currentFilter.1,
+                    name: currentFilter.0
+                ).createView()
+            }
         }
     }
 }
@@ -81,11 +155,15 @@ extension ArticleList {
     enum FilterOptions: Identifiable {
         case query((String, QueryNode<Article>))
         case addNew
+        case editCurrentFilter
+        case clearFilter
         
         var id: String {
             switch self {
             case .query(let pair): return pair.1.id
+            case .clearFilter: return "clearFilter"
             case .addNew: return "addNew"
+            case .editCurrentFilter: return "editCurrentFilter"
             }
         }
     }

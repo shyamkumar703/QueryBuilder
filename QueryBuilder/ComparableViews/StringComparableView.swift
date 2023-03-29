@@ -21,14 +21,26 @@ class StringComparableViewModel: ObservableObject, ComparableViewModel {
         }
     }
     
+    var wasValueSet: Bool = false
+    
     init(value: String?, options: [(any IsComparable)]) {
-        if let value { self.value = value }
+        if let value {
+            self.value = value
+            wasValueSet = true
+        }
+        
         self.options = options
     }
     
     func getValue() -> String { return value }
     
     func createView() -> StringComparableView { StringComparableView(viewModel: self) }
+    
+    func onAppear() {
+        if !wasValueSet {
+            value = displayOptions.randomElement()!
+        }
+    }
     
 }
 
@@ -56,7 +68,7 @@ struct StringComparableView: ComparableView {
             }
         )
         .onAppear {
-            viewModel.value = viewModel.displayOptions.randomElement()!
+            viewModel.onAppear()
         }
     }
     

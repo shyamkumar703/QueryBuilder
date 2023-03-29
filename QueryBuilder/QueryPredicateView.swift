@@ -33,7 +33,7 @@ class QueryPredicateViewModel<QueryableElement: Queryable>: ObservableObject, Id
             if let vm = cachedVMs[cacheKey] {
                 return vm.createView()
             } else {
-                let vm = type.createAssociatedViewModel(options: options)
+                let vm = type.createAssociatedViewModel(options: options, startingValue: nil)
                 cachedVMs[cacheKey] = vm
                 return vm.createView()
             }
@@ -51,6 +51,18 @@ class QueryPredicateViewModel<QueryableElement: Queryable>: ObservableObject, Id
         self.elements = elements
         if !validComparators.contains(selectedComparator) {
             selectedComparator = validComparators.randomElement()!
+        }
+    }
+    
+    init(elements: [QueryableElement], node: QueryNode<QueryableElement>) {
+        self.elements = elements
+        self.comparator = node.comparator
+        self.queryableParam = node.objectKeyPath
+        self.selectedComparator = node.comparator
+        
+        if let type = QueryableElement.queryableParameters[queryableParam] {
+            let cacheKey = String(describing: type)
+            cachedVMs[cacheKey] = type.createAssociatedViewModel(options: options, startingValue: node.compareToValue)
         }
     }
      

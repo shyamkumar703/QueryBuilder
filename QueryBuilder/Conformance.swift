@@ -61,35 +61,35 @@ extension Bool: IsComparable {
         }
     }
     
-    static func createAssociatedViewModel(options: [(any IsComparable)]) -> BoolComparableViewModel {
-        BoolComparableViewModel(value: nil)
+    static func createAssociatedViewModel(options: [(any IsComparable)], startingValue: (any IsComparable)?) -> BoolComparableViewModel {
+        BoolComparableViewModel(value: startingValue as? Bool)
     }
 }
 
 extension Date: IsComparable {
-    static func createAssociatedViewModel(options: [(any IsComparable)]) -> DateComparableViewModel {
-        DateComparableViewModel(value: nil)
+    static func createAssociatedViewModel(options: [(any IsComparable)], startingValue: (any IsComparable)?) -> DateComparableViewModel {
+        DateComparableViewModel(value: startingValue as? Date)
     }
 }
 extension String: IsComparable {
-    static func createAssociatedViewModel(options: [(any IsComparable)]) -> StringComparableViewModel {
-        return StringComparableViewModel(value: nil, options: options)
+    static func createAssociatedViewModel(options: [(any IsComparable)], startingValue: (any IsComparable)?) -> StringComparableViewModel {
+        return StringComparableViewModel(value: startingValue as? String, options: options)
     }
 }
 extension Int: IsComparable {
-    static func createAssociatedViewModel(options: [(any IsComparable)]) -> EmptyComparableViewModel {
+    static func createAssociatedViewModel(options: [(any IsComparable)], startingValue: (any IsComparable)?) -> EmptyComparableViewModel {
         EmptyComparableViewModel()
     }
 }
 extension Double: IsComparable {
     typealias ViewModelType = EmptyComparableViewModel
 
-    static func createAssociatedViewModel(options: [(any IsComparable)]) -> EmptyComparableViewModel {
+    static func createAssociatedViewModel(options: [(any IsComparable)], startingValue: (any IsComparable)?) -> EmptyComparableViewModel {
         EmptyComparableViewModel()
     }
 }
 extension Float: IsComparable {
-    static func createAssociatedViewModel(options: [(any IsComparable)]) -> EmptyComparableViewModel {
+    static func createAssociatedViewModel(options: [(any IsComparable)], startingValue: (any IsComparable)?) -> EmptyComparableViewModel {
         EmptyComparableViewModel()
     }
 }

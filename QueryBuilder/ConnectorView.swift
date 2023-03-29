@@ -11,6 +11,10 @@ class ConnectorViewModel: ObservableObject, Identifiable {
     @Published var queryEval: QueryEval = .and
     var id: UUID = UUID()
     
+    init(queryEval: QueryEval = .and) {
+        self.queryEval = queryEval
+    }
+    
     func createView() -> ConnectorView {
         return ConnectorView(viewModel: self)
     }

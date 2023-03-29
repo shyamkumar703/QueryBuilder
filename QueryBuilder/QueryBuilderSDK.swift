@@ -61,6 +61,16 @@ class QueryBuilderSDK {
             throw QueryBuilderError.serializationFailed
         }
     }
+    
+    static func removeNode<QueryableElement: Queryable>(with name: String, type: QueryableElement.Type) {
+        // Remove key from queryableElement filters
+        let userDefaultsKey = String(describing: QueryableElement.self)
+        let filters: [String] = UserDefaults.standard.object(forKey: userDefaultsKey) as? [String] ?? []
+        let newFilters = filters.filter({ $0 != name })
+        UserDefaults.standard.set(newFilters, forKey: userDefaultsKey)
+        // Remove node from UD
+        UserDefaults.standard.removeObject(forKey: name)
+    }
 }
 
 // MARK: - Error
@@ -69,5 +79,6 @@ extension QueryBuilderSDK {
         case invalidAnyComparable
         case serializationFailed
         case duplicateName
+        case nodeNotFound
     }
 }

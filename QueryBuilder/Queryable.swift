@@ -26,7 +26,7 @@ protocol IsComparable: Codable {
     associatedtype ViewModelType: ComparableViewModel
     func evaluate(comparator: Comparator, against value: any IsComparable) -> Bool
     func getValidComparators() -> [Comparator]
-    static func createAssociatedViewModel(options: [(any IsComparable)]) -> ViewModelType
+    static func createAssociatedViewModel(options: [(any IsComparable)], startingValue: (any IsComparable)?) -> ViewModelType
 }
 
 extension IsComparable {
